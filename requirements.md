@@ -6,6 +6,8 @@
 **Visual Style:** Dark mode (Background: `#0D0D0D`, Text: `#F2F2F2`), Cyan accents (`#00F0FF`), Danger red (`#FF2A2A`)
 **Target:** Educational video explaining Regression (Linear vs. Non-Linear) via Error Minimization and Reward Models
 
+You must implement a video using Manim
+
 ---
 
 ## Implementation Checklist
