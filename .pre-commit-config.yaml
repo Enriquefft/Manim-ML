@@ -1,0 +1,38 @@
+repos:
+  # Regenerate manim stubs if manim source changes
+  - repo: local
+    hooks:
+      - id: generate-manim-stubs
+        name: Generate manim type stubs
+        entry: python scripts/generate_manim_stubs.py
+        language: system
+        files: ^(flake\.nix|pyproject\.toml)$
+        pass_filenames: false
+        stages: [commit]
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.1.8
+    hooks:
+      - id: ruff
+        args: [--fix, --show-fixes]
+      - id: ruff-format
+
+  - repo: https://github.com/RobbieU/pyright-python
+    rev: 1.1.300
+    hooks:
+      - id: pyright
+        args: [--outputjson]
+        additional_dependencies:
+          - numpy
+          - pandas
+          - scipy
+          - scikit-learn
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+        args: [--maxkb=5000]

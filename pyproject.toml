@@ -1,0 +1,55 @@
+[project]
+name = "manim-ml"
+version = "0.1.0"
+description = "Educational video creation framework using Manim for machine learning demonstrations"
+authors = [{name = "Your Name", email = "your.email@example.com"}]
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.13"
+dependencies = [
+  "numpy>=1.20",
+  "pandas>=1.3",
+  "scipy>=1.7",
+  "matplotlib>=3.5",
+  "scikit-learn>=1.0",
+  "pillow>=10.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7.0",
+  "pytest-cov>=4.0",
+  "ruff>=0.1.0",
+  "pyright>=1.1.300",
+  "ipython>=8.0",
+  "pre-commit>=3.0.0",
+]
+
+[tool.ruff]
+target-version = "py313"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [ "D100", "D104"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.pyright]
+pythonVersion = "3.13"
+typeCheckingMode = "strict"
+include = ["src", "videos"]
+exclude = [".venv", "media", "output"]
+reportMissingImports = "error"
+reportMissingTypeStubs = "warning"
+reportImportCycles = "warning"
+reportUnknownParameterType = "warning"
+reportUnknownArgumentType = "warning"
+reportUnknownVariableType = "warning"
+reportUnknownMemberType = "warning"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+addopts = "-v --tb=short"

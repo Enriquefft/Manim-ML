@@ -1,0 +1,15 @@
+{
+  "pythonVersion": "3.13",
+  "typeCheckingMode": "strict",
+  "include": ["videos"],
+  "exclude": [".venv", "media", "output"],
+  "stubPath": "stubs",
+  "reportMissingImports": "error",
+  "reportMissingModuleSource": false,
+  "reportMissingTypeStubs": "warning",
+  "reportImportCycles": "warning",
+  "reportUnknownParameterType": "warning",
+  "reportUnknownArgumentType": "warning",
+  "reportUnknownVariableType": "warning",
+  "reportUnknownMemberType": "warning"
+}
