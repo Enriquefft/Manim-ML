@@ -228,3 +228,6 @@ __marimo__/
 .env
 !.env.example
 *.log
+
+# Claude Code local settings
+.claude/settings.local.json
