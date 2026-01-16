@@ -1,0 +1,16 @@
+1
+00:00:00,000 --> 00:00:02,252
+Welcome to Manim Voiceover!
+
+2
+00:00:02,866 --> 00:00:06,390
+Watch the circle appear!
+
+3
+00:00:07,533 --> 00:00:10,841
+Now we'll transform this circle into a square.
+
+4
+00:00:11,000 --> 00:00:15,484
+This is just the beginning of what you can do with Manim Voiceover!
+

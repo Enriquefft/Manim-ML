@@ -1,0 +1,56 @@
+[
+  {
+    "input_text": "Welcome to Manim Voiceover!",
+    "input_data": {
+      "input_text": "Welcome to Manim Voiceover!",
+      "service": "gtts"
+    },
+    "original_audio": "welcome-to-manim-voiceover-a12e9550.mp3",
+    "final_audio": "welcome-to-manim-voiceover-a12e9550.mp3"
+  },
+  {
+    "input_text": "Let's create a beautiful circle that grows as I speak.",
+    "input_data": {
+      "input_text": "Let's create a beautiful circle that grows as I speak.",
+      "service": "gtts"
+    },
+    "original_audio": "let-s-create-a-beautiful-circle-that-grows-as-i-60f40d44.mp3",
+    "final_audio": "let-s-create-a-beautiful-circle-that-grows-as-i-60f40d44.mp3"
+  },
+  {
+    "input_text": "Now we'll transform this circle into a square.",
+    "input_data": {
+      "input_text": "Now we'll transform this circle into a square.",
+      "service": "gtts"
+    },
+    "original_audio": "now-we-ll-transform-this-circle-into-a-square-f9256295.mp3",
+    "final_audio": "now-we-ll-transform-this-circle-into-a-square-f9256295.mp3"
+  },
+  {
+    "input_text": "This is just the beginning of what you can do with Manim Voiceover!",
+    "input_data": {
+      "input_text": "This is just the beginning of what you can do with Manim Voiceover!",
+      "service": "gtts"
+    },
+    "original_audio": "this-is-just-the-beginning-of-what-you-can-do-with-92d540c1.mp3",
+    "final_audio": "this-is-just-the-beginning-of-what-you-can-do-with-92d540c1.mp3"
+  },
+  {
+    "input_text": "Intelligence without a target is just noise. When Large Language Models were born, they could speak, but they couldn't judge. They had no idea if an answer was brilliant or garbage. To fix this, engineers didn't write rules. They built a mathematical Judge.",
+    "input_data": {
+      "input_text": "Intelligence without a target is just noise. When Large Language Models were born, they could speak, but they couldn't judge. They had no idea if an answer was brilliant or garbage. To fix this, engineers didn't write rules. They built a mathematical Judge.",
+      "service": "gtts"
+    },
+    "original_audio": "intelligence-without-a-target-is-just-noise-when-a63384fb.mp3",
+    "final_audio": "intelligence-without-a-target-is-just-noise-when-a63384fb.mp3"
+  },
+  {
+    "input_text": "Intelligence without a target is just noise. When Large Language Models were born, they could speak, but they couldn't judge. They had no idea if an answer was brilliant or garbage. To fix this, engineers didn't write rules. They built a mathematical Judge.",
+    "input_data": {
+      "input_text": "Intelligence without a target is just noise. When Large Language Models were born, they could speak, but they couldn't judge. They had no idea if an answer was brilliant or garbage. To fix this, engineers didn't write rules. They built a mathematical Judge.",
+      "service": "gtts"
+    },
+    "original_audio": "intelligence-without-a-target-is-just-noise-when-a63384fb.mp3",
+    "final_audio": "intelligence-without-a-target-is-just-noise-when-a63384fb.mp3"
+  }
+]
