@@ -117,7 +117,7 @@ NumPy-based data generators use a fixed seed (`DATA_SEED = 42`) ensuring identic
 
 ## Final Video
 
-[Watch the video](media/videos/judge_curve_complete/1080p60/JudgeCurveComplete.mp4)
+[Watch the video](https://github.com/Enriquefft/Manim-ML/blob/main/media/videos/judge_curve_complete/1080p60/JudgeCurveComplete.mp4)
 
 ---
 
