@@ -105,18 +105,6 @@ NumPy-based data generators use a fixed seed (`DATA_SEED = 42`) ensuring identic
 
 ---
 
-## Script Overview
-
-| Section | Time | Visual Content | Voiceover Theme |
-|---------|------|----------------|-----------------|
-| **1. Hallucination** | 0:00-0:25 | Terminal chaos, "NO METRIC FOUND" warning, static | AI without judgment produces noise |
-| **2. Continuous Scale** | 0:25-0:50 | Split-screen comparison, reward slider | Regression predicts a quantity |
-| **3. Linear Regression** | 0:50-1:15 | Scatter plot, best-fit line, residuals | Minimize error with `y = mx + b` |
-| **4. Non-Linear** | 1:15-1:40 | Dose-response curve, linear failure, polynomial | Reality curves, we bend the math |
-| **5. Synthesis** | 1:40-2:00 | Curve→neuron→network transformation | Neural networks = stacked regressions |
-
----
-
 ## Team Members
 
 | Member | GitHub | Contributions |
