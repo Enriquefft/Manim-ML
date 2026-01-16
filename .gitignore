@@ -231,3 +231,6 @@ __marimo__/
 
 # Claude Code local settings
 .claude/settings.local.json
+
+# Ralph workspace (autonomous development analysis)
+ralph-workspace/

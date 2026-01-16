@@ -23,11 +23,16 @@
               # Python and dev tools
               pkgs.python313
               pkgs.uv
+              pkgs.tmux
 
               # Manim CLI tool (pre-built, works standalone)
               pkgs.manim
               pkgs.ffmpeg
               pkgs.sox
+
+              # manim-voiceover dependencies
+              pkgs.portaudio  # For PyAudio (voice recording)
+              pkgs.gettext    # For translation support
 
               # Tools
               pkgs.ruff
@@ -57,6 +62,8 @@
               . .venv/bin/activate
               # Make manim CLI available
               export PATH="${pkgs.manim}/bin:$PATH"
+              # Add project root to PYTHONPATH for src imports
+              export PYTHONPATH="$PWD:$PYTHONPATH"
             '';
           };
         }
