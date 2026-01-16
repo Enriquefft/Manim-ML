@@ -206,15 +206,6 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 
-# Manim outputs
-/output/
-*.mp4
-*.webm
-*.png
-*.gif
-*.mov
-*.avi
-
 # IDE and editor files
 .vscode/
 .idea/
