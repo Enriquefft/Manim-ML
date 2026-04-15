@@ -14,3 +14,71 @@ no idea if an answer was brilliant or garbage. To fix
 00:00:13,620 --> 00:00:18,500
 this, engineers didn't write rules. They built a mathematical Judge.
 
+5
+00:00:18,789 --> 00:00:23,643
+This 'Judge' (a Reward Model) doesn't just say 'Wrong.' It
+
+6
+00:00:23,743 --> 00:00:28,682
+asks 'How much?' Is this answer 10% useful? 90%? Predicting
+
+7
+00:00:28,782 --> 00:00:33,465
+a precise number on a continuous scale is the definition
+
+8
+00:00:33,565 --> 00:00:39,017
+of Regression. It turns qualitative chaos into quantitative data.
+
+9
+00:00:40,054 --> 00:00:44,835
+In a perfect world, relationships are simple. Double the study
+
+10
+00:00:44,935 --> 00:00:49,479
+time, double the grade. This is Linear Regression. The math
+
+11
+00:00:49,579 --> 00:00:54,438
+draws a straight line (y=mx+b) to minimize the distance between
+
+12
+00:00:54,538 --> 00:00:59,318
+the prediction and reality. We call that distance the 'Error.'
+
+13
+00:00:59,418 --> 00:01:02,466
+The line exists to make the Error small.
+
+14
+00:01:03,521 --> 00:01:08,660
+But biology isn't linear. If you keep doubling the dose, you don't
+
+15
+00:01:08,760 --> 00:01:15,329
+cure the patient—you kill them. Reality saturates. Reality curves. To minimize error
+
+16
+00:01:15,429 --> 00:01:20,568
+here, we must bend the line. This is Non-Linear Regression. We fit
+
+17
+00:01:20,668 --> 00:01:24,061
+the math to the messiness of the real world.
+
+18
+00:01:24,121 --> 00:01:27,434
+And that AI Judge from the beginning? It's not
+
+19
+00:01:27,534 --> 00:01:31,885
+magic. It is just millions of Non-Linear Regressions stacked
+
+20
+00:01:31,985 --> 00:01:35,521
+on top of each other. It processes the complexity
+
+21
+00:01:35,621 --> 00:01:39,453
+of human language to predict one simple thing: Value.
+

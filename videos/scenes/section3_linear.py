@@ -94,6 +94,163 @@ class LinearRegressionScene(VoiceoverScene):
         with self.voiceover(text=self.VOICEOVER_TEXT) as tracker:
             self._run_visual_sequence(tracker.duration)
 
+    def render_animations(self, parent_scene: VoiceoverScene) -> None:
+        """Render this section's animations into a parent scene.
+
+        Args:
+            parent_scene: The parent VoiceoverScene to add animations to.
+
+        """
+        with parent_scene.voiceover(text=self.VOICEOVER_TEXT) as tracker:
+            self._run_visual_sequence_in_scene(parent_scene, tracker.duration)
+
+    def render_to(self, parent_scene: VoiceoverScene) -> None:
+        """Alias for render_animations for backward compatibility.
+
+        Args:
+            parent_scene: The parent VoiceoverScene to add animations to.
+
+        """
+        self.render_animations(parent_scene)
+
+    def _run_visual_sequence_in_scene(
+        self,
+        scene: VoiceoverScene,
+        total_duration: float,
+    ) -> None:
+        """Run visual sequence in a specific scene (for composition).
+
+        Args:
+            scene: The scene to add animations to.
+            total_duration: Total duration from voiceover tracker.
+
+        """
+        # Calculate phase durations
+        grid_duration = total_duration * 0.15
+        points_duration = total_duration * 0.15
+        line_duration = total_duration * 0.15
+        residual_duration = total_duration * 0.25
+        wiggle_duration = total_duration * 0.20
+        fadeout_duration = total_duration * 0.10
+
+        # Phase 1: Create grid with axes
+        axes = self._create_cartesian_grid("Study Hours", "Test Score")
+        scene.play(Create(axes), run_time=grid_duration)
+
+        # Phase 2: Load and display data points
+        data_path = Path("videos/assets/data/linear_data.csv")
+        if data_path.exists():
+            points = self._load_data_points(str(data_path))
+        else:
+            points = generate_linear_data()
+
+        point_mobjects = self._create_data_point_mobjects(points, axes)
+
+        time_per_point = points_duration / len(point_mobjects)
+        for dot in point_mobjects:
+            scene.play(FadeIn(dot), run_time=time_per_point * 0.8)
+
+        # Phase 3: Straight line shoots through
+        regression = self._fit_linear_regression(points)
+        line = self._create_regression_line_mobject(regression, axes, (-0.5, 10.5))
+        scene.play(Create(line), run_time=line_duration)
+
+        # Phase 4: Show residual error
+        error_bars = self._create_error_bars(points, regression, axes)
+
+        errors = create_error_bars(points, regression)
+        max_error_idx = max(range(len(errors)), key=lambda i: abs(errors[i].residual))
+
+        outlier_dot = point_mobjects[max_error_idx]
+        outlier_bar = error_bars[max_error_idx]
+
+        scene.play(Create(outlier_bar), run_time=residual_duration * 0.2)
+
+        scene.play(
+            outlier_dot.animate.scale(1.5),
+            outlier_bar.animate.set_stroke(width=4),
+            run_time=residual_duration * 0.2,
+        )
+
+        residual_label = Text(
+            "RESIDUAL (ERROR)",
+            font_size=24,
+            color=ManimColor(COLORS.RED),
+            weight="BOLD",
+        )
+        residual_label.next_to(outlier_bar, RIGHT, buff=0.2)
+
+        scene.play(Write(residual_label), run_time=residual_duration * 0.3)
+        scene.wait(residual_duration * 0.3)
+
+        # Phase 5: Show all error bars
+        other_bars = VGroup(*[bar for i, bar in enumerate(error_bars) if i != max_error_idx])
+        scene.play(Create(other_bars), run_time=wiggle_duration * 0.3)
+
+        self._animate_error_minimization_in_scene(
+            scene,
+            line,
+            regression,
+            axes,
+            duration=wiggle_duration * 0.7,
+        )
+
+        # Phase 6: Fade out everything
+        all_content = VGroup(
+            axes,
+            point_mobjects,
+            line,
+            error_bars,
+            residual_label,
+        )
+        scene.play(FadeOut(all_content), run_time=fadeout_duration)
+
+    def _animate_error_minimization_in_scene(
+        self,
+        scene: VoiceoverScene,
+        line: Line,
+        regression: RegressionLine,
+        axes: Axes,
+        duration: float,
+    ) -> None:
+        """Animate line wiggling in a specific scene (for composition).
+
+        Args:
+            scene: The scene to add animations to.
+            line: Regression line to wiggle.
+            regression: Fitted regression model.
+            axes: Axes for coordinate conversion.
+            duration: Total duration for the wiggle animation.
+
+        """
+        is_standard_linear = (
+            regression.line_type == "linear"
+            and len(regression.coefficients) == self._LINEAR_COEFFICIENT_COUNT
+        )
+        if is_standard_linear:
+            optimal_slope, optimal_intercept = regression.coefficients
+        else:
+            optimal_slope, optimal_intercept = 1.0, 1.0
+
+        wiggle_offsets = [0.3, -0.2, 0.1, -0.05, 0.0]
+
+        time_per_wiggle = duration / len(wiggle_offsets)
+
+        for offset in wiggle_offsets:
+            new_slope = optimal_slope + offset
+
+            x1, x2 = -0.5, 10.5
+            y1 = new_slope * x1 + optimal_intercept
+            y2 = new_slope * x2 + optimal_intercept
+
+            new_start = axes.c2p(x1, y1)
+            new_end = axes.c2p(x2, y2)
+
+            scene.play(
+                line.animate.put_start_and_end_on(new_start, new_end),
+                run_time=time_per_wiggle,
+            )
+
     def _run_visual_sequence(self, total_duration: float) -> None:
         """Run the visual animation sequence synchronized to voiceover.
 

@@ -102,6 +102,15 @@ class ContinuousScaleScene(VoiceoverScene):
         with parent_scene.voiceover(text=self.VOICEOVER_TEXT) as tracker:
             self._run_visual_sequence_in_scene(parent_scene, tracker.duration)
 
+    def render_to(self, parent_scene: VoiceoverScene) -> None:
+        """Alias for render_animations for backward compatibility.
+
+        Args:
+            parent_scene: The parent VoiceoverScene to add animations to.
+
+        """
+        self.render_animations(parent_scene)
+
     def _run_visual_sequence_in_scene(
         self,
         scene: VoiceoverScene,

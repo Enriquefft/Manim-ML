@@ -19,12 +19,11 @@ Duration: 20 seconds (1:40-2:00)
 from __future__ import annotations
 
 import math
+import random
 
 from manim import (
-    DOWN,
     ORIGIN,
     Create,
-    FadeIn,
     FadeOut,
     ManimColor,
     ParametricFunction,
@@ -77,6 +76,189 @@ class SynthesisScene(VoiceoverScene):
         # Start voiceover that plays throughout the scene
         with self.voiceover(text=self.VOICEOVER_TEXT) as tracker:
             self._run_visual_sequence(tracker.duration)
+
+    def render_animations(self, parent_scene: VoiceoverScene) -> None:
+        """Render this section's animations into a parent scene.
+
+        Args:
+            parent_scene: The parent VoiceoverScene to add animations to.
+
+        """
+        with parent_scene.voiceover(text=self.VOICEOVER_TEXT) as tracker:
+            self._run_visual_sequence_in_scene(parent_scene, tracker.duration)
+
+    def render_to(self, parent_scene: VoiceoverScene) -> None:
+        """Alias for render_animations for backward compatibility.
+
+        Args:
+            parent_scene: The parent VoiceoverScene to add animations to.
+
+        """
+        self.render_animations(parent_scene)
+
+    def _run_visual_sequence_in_scene(
+        self,
+        scene: VoiceoverScene,
+        total_duration: float,
+    ) -> None:
+        """Run visual sequence in a specific scene (for composition).
+
+        Args:
+            scene: The scene to add animations to.
+            total_duration: Total duration from voiceover tracker.
+
+        """
+        # Calculate phase durations
+        isolate_duration = total_duration * 0.20
+        wire_duration = total_duration * 0.25
+        network_duration = total_duration * 0.30
+        judge_duration = total_duration * 0.25
+
+        # Phase 1: Isolate the curved biological line
+        curve = self._create_biological_curve()
+        curve_with_glow = self._isolate_curve(curve)
+        scene.play(Create(curve_with_glow), run_time=isolate_duration * 0.7)
+        scene.wait(isolate_duration * 0.3)
+
+        # Phase 2: Zoom out - curve becomes single wire/neuron
+        wire = self._transform_curve_to_wire_in_scene(scene, curve_with_glow, wire_duration)
+
+        # Phase 3: Reveal massive network of curved wires
+        network = self._reveal_curved_wire_network_in_scene(scene, wire, network_duration)
+
+        # Phase 4: "Judge" text returns, GLOWING
+        self._create_glowing_judge_text_in_scene(scene, network, judge_duration)
+
+    def _transform_curve_to_wire_in_scene(
+        self,
+        scene: VoiceoverScene,
+        curve: VGroup,
+        duration: float,
+    ) -> VGroup | ParametricFunction:
+        """Zoom out - the curve becomes a single wire (for composition).
+
+        Args:
+            scene: The scene to add animations to.
+            curve: The isolated curve VGroup.
+            duration: Duration for the transformation.
+
+        Returns:
+            The resulting small curved wire.
+
+        """
+        scene.play(
+            curve.animate.scale(0.15).move_to(ORIGIN),
+            run_time=duration * 0.6,
+        )
+        scene.wait(duration * 0.4)
+        return curve
+
+    def _reveal_curved_wire_network_in_scene(
+        self,
+        scene: VoiceoverScene,
+        start_wire: VGroup | ParametricFunction,
+        duration: float,
+    ) -> VGroup:
+        """Reveal network of curved wires in a specific scene (for composition).
+
+        Args:
+            scene: The scene to add animations to.
+            start_wire: The starting wire to expand from.
+            duration: Duration for the network reveal.
+
+        Returns:
+            VGroup containing all network wire elements.
+
+        """
+        network_wires = VGroup()
+
+        for row in range(self._WIRE_ROWS):
+            for col in range(self._WIRE_COLS):
+                wire = self._create_small_curved_wire()
+
+                x = (col - self._WIRE_COLS / 2) * self._WIRE_SPACING_X
+                y = (row - self._WIRE_ROWS / 2) * self._WIRE_SPACING_Y
+
+                wire.move_to([x, y, 0])
+                wire.scale(self._WIRE_SCALE)
+
+                base_opacity = 0.6
+                opacity_variation = 0.3 * ((row + col) % 3) / 2
+                wire.set_opacity(base_opacity + opacity_variation)
+
+                network_wires.add(wire)
+
+        connections = self._create_network_connections()
+
+        full_network = VGroup(connections, network_wires)
+
+        full_network.scale(0.01)
+        full_network.move_to(ORIGIN)
+        full_network.set_opacity(0)
+
+        scene.play(FadeOut(start_wire), run_time=duration * 0.15)
+
+        scene.add(full_network)
+        scene.play(
+            full_network.animate.scale(100).set_opacity(1),
+            run_time=duration * 0.65,
+        )
+
+        scene.wait(duration * 0.20)
+
+        return full_network
+
+    def _create_glowing_judge_text_in_scene(
+        self,
+        scene: VoiceoverScene,
+        network: VGroup,  # noqa: ARG002
+        duration: float,
+    ) -> None:
+        """Create glowing "Judge" text in a specific scene (for composition).
+
+        Args:
+            scene: The scene to add animations to.
+            network: The network VGroup to display text over (kept for reference).
+            duration: Duration for the judge text animation.
+
+        """
+        judge_text = Text(
+            "Judge",
+            font_size=108,  # Larger for more impact
+            color=ManimColor(COLORS.GOLD),
+            weight="BOLD",
+        )
+        judge_text.move_to(ORIGIN)
+
+        glow_text = apply_glow_effect(
+            judge_text,
+            glow_factor=2.2,  # Stronger glow
+            opacity=0.6,  # More visible glow
+            color=COLORS.GOLD,
+        )
+
+        scene.play(Write(judge_text), run_time=duration * 0.30)
+
+        scene.remove(judge_text)
+        glow_text.move_to(ORIGIN)
+        scene.add(glow_text)
+
+        # Multiple pulse cycles for dramatic emphasis
+        pulse_time = duration * 0.12
+        for _ in range(3):
+            scene.play(
+                glow_text.animate.scale(1.12),
+                run_time=pulse_time,
+            )
+            scene.play(
+                glow_text.animate.scale(1 / 1.12),
+                run_time=pulse_time,
+            )
+
+        # Hold final frame
+        scene.wait(duration * 0.10)
+
+        # Note: We don't fade out in the final scene to leave the final frame
 
     def _run_visual_sequence(self, total_duration: float) -> None:
         """Run the visual animation sequence synchronized to voiceover.
@@ -175,12 +357,12 @@ class SynthesisScene(VoiceoverScene):
         # Return reference to the transformed curve (now a wire)
         return curve
 
-    # Network generation constants
-    _WIRE_ROWS: int = 12
-    _WIRE_COLS: int = 18
-    _WIRE_SPACING_X: float = 0.8
-    _WIRE_SPACING_Y: float = 0.6
-    _WIRE_SCALE: float = 0.08
+    # Network generation constants - increased for more impressive "millions" effect
+    _WIRE_ROWS: int = 16
+    _WIRE_COLS: int = 24
+    _WIRE_SPACING_X: float = 0.65
+    _WIRE_SPACING_Y: float = 0.5
+    _WIRE_SCALE: float = 0.06
 
     def _reveal_curved_wire_network(
         self,
@@ -265,9 +447,9 @@ class SynthesisScene(VoiceoverScene):
             stroke_width=2,
         )
 
-    # Connection generation constants
-    _CONNECTION_COUNT: int = 150
-    _CONNECTION_OPACITY: float = 0.25
+    # Connection generation constants - increased density for neural network feel
+    _CONNECTION_COUNT: int = 250
+    _CONNECTION_OPACITY: float = 0.3
 
     def _create_network_connections(self) -> VGroup:
         """Create curved connections between network nodes.
@@ -276,8 +458,6 @@ class SynthesisScene(VoiceoverScene):
             VGroup containing curved connection lines.
 
         """
-        import random
-
         connections = VGroup()
 
         # Deterministic randomness for reproducibility
@@ -312,7 +492,7 @@ class SynthesisScene(VoiceoverScene):
 
     def _create_glowing_judge_text(
         self,
-        network: VGroup,
+        network: VGroup,  # noqa: ARG002
         duration: float,
     ) -> None:
         """Create glowing "Judge" text over the network.
@@ -321,50 +501,52 @@ class SynthesisScene(VoiceoverScene):
         "mathematical Judge" that engineers built.
 
         Args:
-            network: The network VGroup to display text over.
+            network: The network VGroup to display text over (kept for reference).
             duration: Duration for the judge text animation.
 
         """
         # Create "Judge" text - connects back to Section 1
         judge_text = Text(
             "Judge",
-            font_size=96,
+            font_size=108,  # Larger for more impact
             color=ManimColor(COLORS.GOLD),
             weight="BOLD",
         )
         judge_text.move_to(ORIGIN)
 
-        # Create glowing version
+        # Create enhanced glowing version with stronger glow
         glow_text = apply_glow_effect(
             judge_text,
-            glow_factor=1.8,
-            opacity=0.5,
+            glow_factor=2.2,  # Stronger glow
+            opacity=0.6,  # More visible glow
             color=COLORS.GOLD,
         )
 
         # Animate text appearing with glow
-        self.play(Write(judge_text), run_time=duration * 0.4)
+        self.play(Write(judge_text), run_time=duration * 0.30)
 
         # Replace with glowing version
         self.remove(judge_text)
         glow_text.move_to(ORIGIN)
         self.add(glow_text)
 
-        # Pulse the glow for emphasis
-        self.play(
-            glow_text.animate.scale(1.1),
-            run_time=duration * 0.2,
-        )
-        self.play(
-            glow_text.animate.scale(1 / 1.1),
-            run_time=duration * 0.2,
-        )
+        # Multiple pulse cycles for dramatic emphasis
+        pulse_time = duration * 0.12
+        for _ in range(3):
+            self.play(
+                glow_text.animate.scale(1.12),
+                run_time=pulse_time,
+            )
+            self.play(
+                glow_text.animate.scale(1 / 1.12),
+                run_time=pulse_time,
+            )
 
-        self.wait(duration * 0.2)
+        # Hold final frame
+        self.wait(duration * 0.10)
 
-        # Fade everything out
-        all_content = VGroup(network, glow_text)
-        self.play(FadeOut(all_content), run_time=duration * 0.0)
+        # Final scene - keep "Judge" text glowing over network as ending frame
+        # No fade-out needed since this is the video's conclusion
 
     def get_duration(self) -> float:
         """Return scene duration."""

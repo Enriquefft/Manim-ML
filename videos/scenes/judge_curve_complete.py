@@ -1,6 +1,6 @@
 """Complete video composition for The Judge & The Curve.
 
-Composes all 5 sections into a single 2-minute video with
+Compose all 5 sections into a single 2-minute video with
 precise timing boundaries and seamless transitions.
 """
 
@@ -8,8 +8,14 @@ from __future__ import annotations
 
 from manim import Scene
 from manim_voiceover import VoiceoverScene
+from manim_voiceover.services.gtts import GTTSService
 
 from src.utils.color_utils import get_background_color
+from videos.scenes.section1_hallucination import HallucinationScene
+from videos.scenes.section2_scale import ContinuousScaleScene
+from videos.scenes.section3_linear import LinearRegressionScene
+from videos.scenes.section4_nonlinear import NonLinearRegressionScene
+from videos.scenes.section5_synthesis import SynthesisScene
 
 
 class JudgeCurveComplete(VoiceoverScene):
@@ -28,8 +34,6 @@ class JudgeCurveComplete(VoiceoverScene):
     def construct(self) -> None:
         """Build the complete video sequence."""
         # Initialize voiceover service
-        from manim_voiceover.services.gtts import GTTSService
-
         self.set_speech_service(GTTSService())
 
         # Set background color
@@ -38,18 +42,17 @@ class JudgeCurveComplete(VoiceoverScene):
         # Section 1: Hallucination (25 seconds)
         self._render_section_1()
 
-        # TODO: Add render_animations() method to remaining sections
         # Section 2: Continuous Scale (25 seconds)
-        # self._render_section_2()
+        self._render_section_2()
 
         # Section 3: Linear Regression (25 seconds)
-        # self._render_section_3()
+        self._render_section_3()
 
         # Section 4: Non-Linear Regression (25 seconds)
-        # self._render_section_4()
+        self._render_section_4()
 
         # Section 5: Synthesis (20 seconds)
-        # self._render_section_5()
+        self._render_section_5()
 
     def _render_section_1(self) -> None:
         """Render Section 1: Hallucination scene.
@@ -58,8 +61,6 @@ class JudgeCurveComplete(VoiceoverScene):
         Establishes AI hallucination metaphor with terminal chaos,
         warning overlay, and static dissolution.
         """
-        from videos.scenes.section1_hallucination import HallucinationScene
-
         # Render section animations to this scene
         section = HallucinationScene()
         section.render_animations(self)
@@ -74,10 +75,8 @@ class JudgeCurveComplete(VoiceoverScene):
         Introduces continuous scoring concept with split screen
         and slider visualization.
         """
-        from videos.scenes.section2_scale import ContinuousScaleScene
-
         section = ContinuousScaleScene()
-        section.render_to(self)
+        section.render_animations(self)
 
         self.clear()
 
@@ -88,10 +87,8 @@ class JudgeCurveComplete(VoiceoverScene):
         Demonstrates linear regression with data points,
         best-fit line, equation, and error visualization.
         """
-        from videos.scenes.section3_linear import LinearRegressionScene
-
         section = LinearRegressionScene()
-        section.render_to(self)
+        section.render_animations(self)
 
         self.clear()
 
@@ -102,10 +99,8 @@ class JudgeCurveComplete(VoiceoverScene):
         Shows linear model failure on S-curve data,
         then morphs to polynomial curve.
         """
-        from videos.scenes.section4_nonlinear import NonLinearRegressionScene
-
         section = NonLinearRegressionScene()
-        section.render_to(self)
+        section.render_animations(self)
 
         self.clear()
 
@@ -116,10 +111,8 @@ class JudgeCurveComplete(VoiceoverScene):
         Compresses curve to node, expands to neural network,
         displays final "VALUE PREDICTED" message.
         """
-        from videos.scenes.section5_synthesis import SynthesisScene
-
         section = SynthesisScene()
-        section.render_to(self)
+        section.render_animations(self)
 
         # No clear needed - this is the final scene
 
@@ -135,7 +128,7 @@ class BaseVideoScene(Scene):
     END_TIME: float = 0.0
 
     def construct(self) -> None:
-        """Main animation sequence. Must complete within duration."""
+        """Build the scene's main animation sequence."""
         # Set background color
         self.camera.background_color = get_background_color()
 

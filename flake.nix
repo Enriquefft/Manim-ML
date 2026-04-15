@@ -31,8 +31,10 @@
               pkgs.sox
 
               # manim-voiceover dependencies
-              pkgs.portaudio  # For PyAudio (voice recording)
-              pkgs.gettext    # For translation support
+              pkgs.portaudio # For PyAudio (voice recording)
+              pkgs.gettext # For translation support
+
+              pkgs.texliveFull
 
               # Tools
               pkgs.ruff

@@ -87,6 +87,98 @@ class NonLinearRegressionScene(VoiceoverScene):
         with self.voiceover(text=self.VOICEOVER_TEXT) as tracker:
             self._run_visual_sequence(tracker.duration)
 
+    def render_animations(self, parent_scene: VoiceoverScene) -> None:
+        """Render this section's animations into a parent scene.
+
+        Args:
+            parent_scene: The parent VoiceoverScene to add animations to.
+
+        """
+        with parent_scene.voiceover(text=self.VOICEOVER_TEXT) as tracker:
+            self._run_visual_sequence_in_scene(parent_scene, tracker.duration)
+
+    def render_to(self, parent_scene: VoiceoverScene) -> None:
+        """Alias for render_animations for backward compatibility.
+
+        Args:
+            parent_scene: The parent VoiceoverScene to add animations to.
+
+        """
+        self.render_animations(parent_scene)
+
+    def _run_visual_sequence_in_scene(
+        self,
+        scene: VoiceoverScene,
+        total_duration: float,
+    ) -> None:
+        """Run visual sequence in a specific scene (for composition).
+
+        Args:
+            scene: The scene to add animations to.
+            total_duration: Total duration from voiceover tracker.
+
+        """
+        # Calculate phase durations
+        grid_duration = total_duration * 0.15
+        points_duration = total_duration * 0.15
+        linear_fail_duration = total_duration * 0.25
+        bend_duration = total_duration * 0.25
+        conclusion_duration = total_duration * 0.20
+
+        # Phase 1: Create graph with axes
+        axes = self._create_dose_response_axes()
+        scene.play(Create(axes), run_time=grid_duration)
+
+        # Phase 2: Data points appear - dose response pattern
+        points = self._generate_dose_response_data()
+        point_mobjects = self._create_data_point_mobjects(points, axes)
+
+        time_per_point = points_duration / len(point_mobjects)
+        for dot in point_mobjects:
+            scene.play(FadeIn(dot), run_time=time_per_point * 0.8)
+
+        # Phase 3: Linear line FAILS - MASSIVE error bars
+        linear_regression = fit_linear_regression(points)
+
+        linear_line = Line(
+            start=axes.c2p(-0.5, linear_regression.predict(-0.5)),
+            end=axes.c2p(12, linear_regression.predict(12)),
+            color=ManimColor(COLORS.CYAN),
+            stroke_width=3,
+        )
+
+        scene.play(Create(linear_line), run_time=linear_fail_duration * 0.3)
+
+        error_bars = self._create_massive_error_bars(points, linear_regression, axes)
+        scene.play(Create(error_bars), run_time=linear_fail_duration * 0.4)
+        scene.wait(linear_fail_duration * 0.3)
+
+        # Phase 4: Line BENDS into hill shape
+        hill_curve = self._create_hill_curve(axes)
+
+        scene.play(
+            FadeOut(error_bars),
+            Transform(linear_line, hill_curve),
+            run_time=bend_duration * 0.7,
+        )
+        scene.wait(bend_duration * 0.3)
+
+        # Phase 5: Show "NON-LINEAR REGRESSION" text and fade out
+        conclusion_text = Text(
+            "NON-LINEAR REGRESSION",
+            font_size=36,
+            color=ManimColor(COLORS.CYAN),
+            weight="BOLD",
+        )
+        conclusion_text.to_edge(DOWN, buff=0.5)
+
+        scene.play(Write(conclusion_text), run_time=conclusion_duration * 0.5)
+        scene.wait(conclusion_duration * 0.2)
+
+        # Fade out everything
+        all_content = VGroup(axes, point_mobjects, linear_line, conclusion_text)
+        scene.play(FadeOut(all_content), run_time=conclusion_duration * 0.3)
+
     def _run_visual_sequence(self, total_duration: float) -> None:
         """Run the visual animation sequence synchronized to voiceover.
 
